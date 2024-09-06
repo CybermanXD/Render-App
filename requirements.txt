@@ -1,5 +1,7 @@
 Flask==2.0.2
-gunicorn==20.1.0
-fpdf==1.7.2
-python-docx==0.8.11
-google-generativeai==0.7.2
+gunicorn
+fpdf
+python-docx
+google-generativeai
+Werkzeug
+
