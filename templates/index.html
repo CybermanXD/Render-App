@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novel Notes App</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Generate Novel Notes</h1>
+        
+        <form id="novel-form">
+            <label for="novelName">Novel Name:</label>
+            <input type="text" id="novelName" name="novelName" required>
+
+            <label for="authorName">Author Name:</label>
+            <input type="text" id="authorName" name="authorName" required>
+
+            <button type="submit" id="generate-btn">Generate Notes</button>
+        </form>
+
+        <div id="loading" align="center" class="loading-screen" style="display:none;">
+            <div class="loader loader2">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        </div>
+
+        <div id="content-area" class="content-area" style="display:none;">
+            <textarea id="notes" readonly></textarea>
+
+            <div id="download-buttons" class="download-buttons" style="display:none;">
+                <button id="download-pdf" class="download-btn">Download PDF</button>
+                <button id="download-doc" class="download-btn">Download DOC</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#novel-form').on('submit', function(event) {
+                event.preventDefault();
+                
+                // Show loading screen and hide content area
+                $('#loading').show();
+                $('#content-area').hide();
+                $('#download-buttons').hide();
+
+                const novelName = $('#novelName').val();
+                const authorName = $('#authorName').val();
+
+                $.ajax({
+                    url: '/generate_notes',
+                    method: 'POST',
+                    data: {
+                        novelName: novelName,
+                        authorName: authorName
+                    },
+                    success: function(response) {
+                        $('#loading').hide();
+                        $('#content-area').show();
+                        $('#notes').val(response.notes);
+                        $('#download-buttons').show();
+                    },
+                    error: function() {
+                        $('#loading').hide();
+                        alert('Error generating notes.');
+                    }
+                });
+            });
+
+            $('#download-pdf').on('click', function() {
+                window.location.href = '/download/pdf';
+            });
+
+            $('#download-doc').on('click', function() {
+                window.location.href = '/download/doc';
+            });
+        });
+    </script>
+</body>
+</html>
